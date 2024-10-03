@@ -1,0 +1,8 @@
+# visual studio code
+.vscode/
+
+# build
+dist/
+
+# enviroment
+.env
