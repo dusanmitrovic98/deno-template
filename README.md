@@ -1,4 +1,4 @@
-# Deno Project
+# Deno Template
 
 A modern TypeScript project using Deno runtime.
 
@@ -17,44 +17,17 @@ A modern TypeScript project using Deno runtime.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/dusanmitrovic98/deno-template.git
+cd deno-template
 ```
 
 No additional installation steps are needed as Deno handles dependencies automatically!
-
-## 🏃‍♂️ Running the Project
-
-Start the development server:
-```bash
-deno task dev
-```
-
-This will run the project in watch mode, automatically reloading when files change.
-
-## 📦 Building for Production
-
-Build the project:
-```bash
-deno task build
-```
-
-To build and automatically commit, push, and sync changes:
-```bash
-deno task build:git
-```
-
-Run the production build:
-```bash
-deno task start
-```
 
 ## 🔧 Available Tasks
 
 - `deno task dev` - Start development server with watch mode
 - `deno task build` - Build the project
 - `deno task start` - Run the production build
-- `deno task test` - Run tests
 - `deno task lint` - Lint the codebase
 - `deno task fmt` - Format the codebase
 
@@ -64,18 +37,45 @@ deno task start
 - `deno task sync` - Sync with remote repository
 - `deno task git` - Run all git tasks (commit, push, sync)
 
+### Version Management Tasks
+- `deno task version:major` - Bump major version
+- `deno task version:minor` - Bump minor version
+- `deno task version:patch` - Bump patch version
+- `deno task version:rollback` - Rollback version
+
+### Release Tasks
+- `deno task release:major` - Release major version update
+- `deno task release:minor` - Release minor version update
+- `deno task release:patch` - Release patch version update
+- `deno task release` - Quick release (equivalent to patch release)
+
+### Combined Tasks
+- `deno task build:git` - Build the project and run all git tasks
+
+This updated documentation now includes all the tasks you've defined in your scripts, including the version management and release tasks. It provides a comprehensive overview of the available commands for development, building, version control, and releasing your project.
+
+Note that I've removed the `test` task from the documentation as it wasn't present in the scripts you provided. If you do have tests in your project, you might want to add a `test` task to your scripts and include it in the documentation.
+
+
 ## 🏗️ Project Structure
 
 ```
 /
 ├── .core/          # Core utilities
-│   └── git/        # Git automation scripts
+│   ├── git/        # Git automation scripts
+│   │   ├── commit.ts
+│   │   ├── push.ts
+│   │   └── sync.ts
+│   └── version-bump.ts  # Version management script
 ├── src/            # Source code
-├── tests/          # Test files
 ├── dist/           # Production build
-├── deno.json       # Deno configuration
+│   └── bundle.js   # Bundled JavaScript file
+├── deno.json       # Deno configuration and scripts
 ├── index.ts        # Entry point
-└── build.ts        # Build script
+├── build.ts        # Build script
+├── README.md       # Project documentation
+├── VERSION_BUMP_GUIDE.md  # Guide for version bumping
+└── version-history.json   # Version history tracking
 ```
 
 ## 🧪 Testing
@@ -104,6 +104,8 @@ deno task lint
 All dependencies are managed through Deno's import system. Key dependencies include:
 
 - `@std/assert` - Standard library assertions
+- `@std/fs` - Standard library file system operations
+- `@std/path` - Standard library path manipulation
 
 ## 🤝 Contributing
 
@@ -115,10 +117,32 @@ All dependencies are managed through Deno's import system. Key dependencies incl
 
 ## 📄 License
 
-[Choose an appropriate license and include it here]
+This project is licensed under the MIT License.
+
+MIT License
+
+Copyright (c) 2024 Dušan Mitrović
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ## 📞 Contact
 
-[Your Name] - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
+Dušan Mitrović - [@dusanmitrovic98](https://twitter.com/dusanmitrovic98) - dusanmitrovicoffice@gmail.com
 
-Project Link: [https://github.com/yourusername/your-repo-name](https://github.com/yourusername/your-repo-name)
+Project Link: [https://github.com/dusanmitrovic98/deno-template](https://github.com/dusanmitrovic98/deno-template)
