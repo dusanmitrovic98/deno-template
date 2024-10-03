@@ -190,7 +190,6 @@ async function updateVersion(bumpType: BumpType) {
     changeDescription = `Updated ${bumpType} version from ${currentVersion} to ${newVersion}`;
   }
   
-  // Check if the new version is different from the current version
   if (newVersion !== denoJson.version) {
     denoJson.version = newVersion;
     await writeJsonFile(DENO_JSON_PATH, denoJson);
