@@ -1,5 +1,7 @@
 import { bold, green, yellow, blue, red, white, cyan } from "https://deno.land/std@0.208.0/fmt/colors.ts";
 
+import { setupEnv } from './env.ts';
+
 export enum LogLevel {
     INFO,
     SUCCESS,
@@ -8,8 +10,10 @@ export enum LogLevel {
     NONE
 }
 
+const env = await setupEnv();
+
 export class Logger {
-    private static currentLogLevel: LogLevel = LogLevel.INFO;
+    private static environment: string = env.ENV;
 
     private static timestamp(): string {
         const now = new Date();
@@ -19,30 +23,34 @@ export class Logger {
         return `${hours}:${minutes}:${seconds}`;
     }
 
-    static setLogLevel(level: LogLevel): void {
-        this.currentLogLevel = level;
+    static setEnvironment(env: string): void {
+        this.environment = env;
     }
-    
-    static success(message: string): void {
-        if (this.currentLogLevel <= LogLevel.SUCCESS) {
+
+    private static shouldLog(forceLog: boolean): boolean {;
+        return forceLog || this.environment === 'development';
+    }
+
+    static success(message: string, forceLog: boolean = false): void {
+        if (this.shouldLog(forceLog)) {
             this.log(`${green('✔')} ${green(message)}`);
         }
     }
 
-    static info(message: string): void {
-        if (this.currentLogLevel <= LogLevel.INFO) {
+    static info(message: string, forceLog: boolean = false): void {
+        if (this.shouldLog(forceLog)) {
             this.log(`${blue(message)}`);
         }
     }
 
-    static warn(message: string): void {
-        if (this.currentLogLevel <= LogLevel.WARN) {
+    static warn(message: string, forceLog: boolean = false): void {
+        if (this.shouldLog(forceLog)) {
             this.log(`${yellow('⚠')} ${yellow(message)}`);
         }
     }
 
-    static error(message: string): void {
-        if (this.currentLogLevel <= LogLevel.ERROR) {
+    static error(message: string, forceLog: boolean = false): void {
+        if (this.shouldLog(forceLog)) {
             this.log(`${red('✖')} ${red(message)}`);
         }
     }
@@ -55,23 +63,29 @@ export class Logger {
         }
     }
 
-    static header(text: string) {
+    static header(text: string, forceLog: boolean = false) {
+        if (this.shouldLog(forceLog)) {
         console.log(bold(cyan(`
 ╔════════════════════════════════════════════════╗
 ║ ${text.padEnd(46)} ║
 ╚════════════════════════════════════════════════╝`)));
-      }
-    
-      static logSection(title: string, color: (str: string) => string) {
-        console.log(color(`\n■ ${title}`));
-        console.log(color(`${'─'.repeat(50)}`));
-      }
-    
-      static logKeyValue(key: string, value: string) {
-        console.log(`${white(bold(key.padEnd(15)))} : ${value}`);
-      }
+        }
+    }
 
-      static clear(){
+    static logSection(title: string, color: (str: string) => string, forceLog: boolean = false) {
+        if (this.shouldLog(forceLog)) {
+            console.log(color(`\n■ ${title}`));
+        console.log(color(`${'─'.repeat(50)}`));
+        }
+    }
+
+    static logKeyValue(key: string, value: string, forceLog: boolean = false) {
+        if (this.shouldLog(forceLog)) {
+            console.log(`${white(bold(key.padEnd(15)))} : ${value}`);
+        }
+    }
+
+    static clear() {
         console.clear();
-      }
+    }
 }
