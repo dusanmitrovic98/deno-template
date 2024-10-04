@@ -1,7 +1,7 @@
 {
   "version": "0.0.1",
   "tasks": {
-    "dev": "deno run --allow-read --watch ./index.ts",
+    "dev": "deno run --allow-read --allow-write --watch ./index.ts",
     "commit": "deno run --allow-run --allow-read ./.core/git/commit.ts",
     "push": "deno run --allow-run --allow-read ./.core/git/push.ts",
     "sync": "deno run --allow-run --allow-read ./.core/git/sync.ts",

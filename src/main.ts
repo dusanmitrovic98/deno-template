@@ -1,3 +1,3 @@
 export function main(): void {
-  console.log('hello world from main.ts!');
+  console.log('hello world from ./src/main.ts!');
 }
