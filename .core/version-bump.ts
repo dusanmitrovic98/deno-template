@@ -120,15 +120,12 @@ async function gitCommand(args: string[], cwd: string): Promise<void> {
 
 async function rollbackGitHub(currentVersion: string, previousVersion: string): Promise<void> {
   try {
-    // Update CHANGELOG.md locally
     const changeDescription = `Rolled back from v${currentVersion} to v${previousVersion}`;
     await updateChangelog(previousVersion, "rollback", changeDescription);
 
-    // Commit the changes
     await gitCommand(["add", "."], projectRoot);
     await gitCommand(["commit", "-m", `rollback v${currentVersion} to v${previousVersion}`], projectRoot);
 
-    // Push the changes to GitHub
     await gitCommand(["push", "origin", "main"], projectRoot);
     console.log("Changes pushed to GitHub successfully");
   } catch (error) {
@@ -151,14 +148,12 @@ async function updateVersion(bumpType: BumpType) {
     newVersion = history.previous[0];
     changeDescription = `Rolled back from v${currentVersion} to v${newVersion}`;
     
-    // Update version history
     const updatedHistory: VersionHistory = {
       current: newVersion,
       previous: history.previous.slice(1),
     };
     await writeJsonFile(VERSION_HISTORY_FILE, updatedHistory);
     
-    // Update deno.json
     const denoJson = await readJsonFile(DENO_JSON_PATH);
     if (denoJson) {
       denoJson.version = newVersion;
@@ -189,7 +184,6 @@ async function updateVersion(bumpType: BumpType) {
     newVersion = `${version.major}.${version.minor}.${version.patch}`;
     changeDescription = `Updated ${bumpType} version from ${currentVersion} to ${newVersion}`;
     
-    // Update deno.json
     const denoJson = await readJsonFile(DENO_JSON_PATH);
     if (denoJson) {
       denoJson.version = newVersion;
