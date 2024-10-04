@@ -126,7 +126,7 @@ async function rollbackGitHub(currentVersion: string, previousVersion: string): 
 
     // Commit the changes
     await gitCommand(["add", "."], projectRoot);
-    await gitCommand(["commit", "-m", `rollback ${currentVersion} to ${previousVersion}`], projectRoot);
+    await gitCommand(["commit", "-m", `rollback v${currentVersion} to v${previousVersion}`], projectRoot);
 
     // Push the changes to GitHub
     await gitCommand(["push", "origin", "main"], projectRoot);
