@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "tasks": {
     "dev": "deno run --allow-read --allow-write --watch ./index.ts",
     "commit": "deno run --allow-run --allow-read ./.core/git/commit.ts",
@@ -15,7 +15,7 @@
     "version:major": "deno run --allow-read --allow-write ./.core/version-bump.ts major",
     "version:minor": "deno run --allow-read --allow-write ./.core/version-bump.ts minor",
     "version:patch": "deno run --allow-read --allow-write ./.core/version-bump.ts patch",
-    "version:rollback": "deno run --allow-read --allow-write ./.core/version-bump.ts rollback",
+    "version:rollback": "deno run --allow-read --allow-write --allow-run ./.core/version-bump.ts rollback",
     "release:major": "deno task version:major && deno task build:git --wait",
     "release:minor": "deno task version:minor && deno task build:git --wait",
     "release:patch": "deno task version:patch && deno task build:git --wait",

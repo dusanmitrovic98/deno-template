@@ -167,6 +167,40 @@ async function updateChangelog(newVersion: string, bumpType: BumpType, changeDes
   await Deno.writeTextFile(CHANGELOG_PATH, updatedChangelog);
 }
 
+async function gitCommand(args: string[], cwd: string): Promise<void> {
+  const process = new Deno.Command("git", {
+    args,
+    cwd,
+  });
+  const { code } = await process.output();
+  if (code !== 0) {
+    throw new Error(`Git command failed: git ${args.join(" ")}`);
+  }
+}
+
+async function rollbackGitHub(currentVersion: string, previousVersion: string): Promise<void> {
+  try {
+    // Revert the repository to the previous version
+    await gitCommand(["reset", "--hard", `v${previousVersion}`], projectRoot);
+    console.log(`Repository reverted to v${previousVersion}`);
+
+    // Update CHANGELOG.md locally
+    const changeDescription = `Rolled back from v${currentVersion} to v${previousVersion}`;
+    await updateChangelog(previousVersion, "rollback", changeDescription);
+
+    // Commit the updated CHANGELOG.md
+    await gitCommand(["add", "CHANGELOG.md"], projectRoot);
+    await gitCommand(["commit", "-m", `Rollback v${currentVersion} to v${previousVersion}`], projectRoot);
+
+    // Push the changes to GitHub
+    await gitCommand(["push", "-f", "origin", "main"], projectRoot);
+    console.log("Changes pushed to GitHub successfully");
+  } catch (error) {
+    console.error("Error during GitHub rollback:", error.message);
+    throw error;
+  }
+}
+
 async function updateVersion(bumpType: BumpType) {
   const denoJson = await readJsonFile(DENO_JSON_PATH);
   
@@ -178,31 +212,25 @@ async function updateVersion(bumpType: BumpType) {
     denoJson.version = "0.1.0";
   }
 
+  const currentVersion = denoJson.version;
   let newVersion: string;
   let changeDescription: string;
   
   if (bumpType === "rollback") {
     newVersion = await rollbackVersion();
     changeDescription = `Reverted to version ${newVersion}`;
+    await rollbackGitHub(currentVersion, newVersion);
   } else {
-    const currentVersion = denoJson.version;
     newVersion = bumpVersion(currentVersion, bumpType);
     changeDescription = `Updated ${bumpType} version from ${currentVersion} to ${newVersion}`;
-  }
-  
-  if (newVersion !== denoJson.version) {
+    
     denoJson.version = newVersion;
     await writeJsonFile(DENO_JSON_PATH, denoJson);
     await updateVersionHistory(newVersion);
     await updateChangelog(newVersion, bumpType, changeDescription);
     
-    const action = bumpType === "rollback" ? "rolled back" : "bumped";
-    console.log(`Version ${action} to ${newVersion}`);
-  } else {
-    console.log(`Version unchanged: ${newVersion}`);
+    console.log(`Version bumped to ${newVersion}`);
   }
-  
-  return newVersion;
 }
 
 if (import.meta.main) {
