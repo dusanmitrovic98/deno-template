@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.0.2] - 2024-10-04
+### Patch
+- Updated patch version from 1.0.1 to 1.0.2
+
 ## [1.0.1] - 2024-10-04
 ### Patch
 - Updated patch version from 1.0.0 to 1.0.1
