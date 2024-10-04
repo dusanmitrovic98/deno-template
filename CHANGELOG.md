@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.0.0] - 2024-10-04
+### Major
+- Updated major version from 0.0.7 to 1.0.0
+
 ## [0.0.7] - 2024-10-04
 ### Patch
 - Updated patch version from 0.0.6 to 0.0.7
