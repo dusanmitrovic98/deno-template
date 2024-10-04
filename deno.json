@@ -1,5 +1,5 @@
 {
-  "version": "2.0.1",
+  "version": "2.0.2",
   "tasks": {
     "dev": "deno run --allow-read --allow-write --watch ./index.ts",
     "commit": "deno run --allow-run --allow-read ./.core/git/commit.ts",
