@@ -2,7 +2,7 @@ import { join } from 'https://deno.land/std@0.208.0/path/mod.ts';
 
 const dir = Deno.cwd();
 const denoJson = JSON.parse(await Deno.readTextFile(join(dir, "deno.json")));
-const commitMessage = `release ${denoJson.version}`;
+const commitMessage = `v${denoJson.version}`;
 
 try {
   const status = await new Deno.Command("git", {
