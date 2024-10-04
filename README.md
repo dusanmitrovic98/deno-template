@@ -1,4 +1,4 @@
-# Deno Template
+# Deno Template 
 
 A modern TypeScript project using Deno runtime.
 
