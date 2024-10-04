@@ -3,6 +3,10 @@
 ## [Unreleased]
 
 ## [0.0.6] - 2024-10-04
+### Rollback
+- Rolled back from v0.0.7 to v0.0.6
+
+## [0.0.6] - 2024-10-04
 ### Patch
 - Updated patch version from 0.0.5 to 0.0.6
 
