@@ -1,5 +1,7 @@
+import { 
+  cyan, brightYellow, brightMagenta, green, white, red, bold 
+} from 'https://deno.land/std@0.208.0/fmt/colors.ts';
 import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
-
 import { Logger } from './.core/logger.ts';
 import { main } from "./src/main.ts";
 
@@ -9,34 +11,27 @@ interface Env {
   [key: string]: string;
 }
 
-(() => {
+(async () => {
   try {
     const env = config() as Env;
     
-    Logger.header(`Starting ${env.APP_NAME || 'Application'}`);
+    Logger.header(`${env.APP_NAME.toUpperCase()} - ${env.ENV.toUpperCase()} MODE`);
 
-    Logger.info("Environment Variables:");
-    for (const [key, value] of Object.entries(env)) {
-      Logger.envVar(key, value);
-    }
+    Logger.logSection("Environment Variables", brightYellow);
+    Logger.logKeyValue("APP_NAME", env.APP_NAME);
+    Logger.logKeyValue("ENV", env.ENV);
 
-    if (env.ENV === "production") {
-      Logger.warn("Running in PRODUCTION mode");
-    } else {
-      Logger.info("Running in DEVELOPMENT mode");
-    }
-
-    Logger.header("MAIN PROGRAM");
-    
+    Logger.logSection("Main Program", brightMagenta);
     const startTime = performance.now();
-    main();
+    await main();
     const endTime = performance.now();
     
-    Logger.header("PROGRAM COMPLETED");
-    Logger.success(`Execution time: ${(endTime - startTime).toFixed(2)}ms`);
+    Logger.logSection("Program Completed", cyan);
+    Logger.logKeyValue("Execution time", `${green(`${(endTime - startTime).toFixed(2)} ms\n`)}`);
 
   } catch (error) {
-    Logger.error(`An error occurred: ${error.message}`);
+    Logger.logSection("Error Occurred", red);
+    console.error(red(`${error.message}`));
     throw error;
   }
 })();
