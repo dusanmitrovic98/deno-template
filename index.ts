@@ -14,6 +14,8 @@ interface Env {
 (async () => {
   try {
     const env = config() as Env;
+
+    Logger.clear();
     
     Logger.header(`${env.APP_NAME.toUpperCase()} - ${env.ENV.toUpperCase()} MODE`);
 

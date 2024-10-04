@@ -70,4 +70,8 @@ export class Logger {
       static logKeyValue(key: string, value: string) {
         console.log(`${white(bold(key.padEnd(15)))} : ${value}`);
       }
+
+      static clear(){
+        console.clear();
+      }
 }
