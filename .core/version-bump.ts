@@ -167,21 +167,41 @@ async function updateChangelog(newVersion: string, bumpType: BumpType, changeDes
   await Deno.writeTextFile(CHANGELOG_PATH, updatedChangelog);
 }
 
-async function gitCommand(args: string[], cwd: string): Promise<void> {
+async function gitCommand(args: string[], cwd: string): Promise<string> {
   const process = new Deno.Command("git", {
     args,
     cwd,
+    stdout: "piped",
+    stderr: "piped",
   });
-  const { code } = await process.output();
+  const { code, stdout, stderr } = await process.output();
   if (code !== 0) {
-    throw new Error(`Git command failed: git ${args.join(" ")}`);
+    throw new Error(`Git command failed: git ${args.join(" ")}\n${new TextDecoder().decode(stderr)}`);
+  }
+  return new TextDecoder().decode(stdout).trim();
+}
+
+async function getCommitHashForVersion(version: string): Promise<string> {
+  try {
+    return await gitCommand(["rev-list", "-n", "1", `v${version}`], projectRoot);
+  } catch (error) {
+    console.error(`No tag found for version ${version}. Searching commit history...`);
+    const commitMsg = `v${version}`;
+    const result = await gitCommand(["log", "--grep", commitMsg, "--format=%H"], projectRoot);
+    if (!result) {
+      throw new Error(`Unable to find a commit for version ${version}`);
+    }
+    return result.split("\n")[0]; // Get the first matching commit
   }
 }
 
 async function rollbackGitHub(currentVersion: string, previousVersion: string): Promise<void> {
   try {
+    const commitHash = await getCommitHashForVersion(previousVersion);
+    console.log(`Rolling back to commit: ${commitHash}`);
+
     // Revert the repository to the previous version
-    await gitCommand(["reset", "--hard", `v${previousVersion}`], projectRoot);
+    await gitCommand(["reset", "--hard", commitHash], projectRoot);
     console.log(`Repository reverted to v${previousVersion}`);
 
     // Update CHANGELOG.md locally
@@ -217,9 +237,24 @@ async function updateVersion(bumpType: BumpType) {
   let changeDescription: string;
   
   if (bumpType === "rollback") {
-    newVersion = await rollbackVersion();
+    const history = await getVersionHistory();
+    if (history.previous.length === 0) {
+      throw new Error("No previous version found to rollback to");
+    }
+    newVersion = history.previous[0];
     changeDescription = `Reverted to version ${newVersion}`;
     await rollbackGitHub(currentVersion, newVersion);
+    
+    // Update version history after successful rollback
+    const updatedHistory: VersionHistory = {
+      current: newVersion,
+      previous: history.previous.slice(1),
+    };
+    await writeJsonFile(VERSION_HISTORY_FILE, updatedHistory);
+    
+    // Update deno.json with the rolled back version
+    denoJson.version = newVersion;
+    await writeJsonFile(DENO_JSON_PATH, denoJson);
   } else {
     newVersion = bumpVersion(currentVersion, bumpType);
     changeDescription = `Updated ${bumpType} version from ${currentVersion} to ${newVersion}`;
