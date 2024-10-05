@@ -8,6 +8,7 @@ A modern TypeScript project using Deno runtime.
 - Automated Git workflow
 - Build system for production
 - Type safety with TypeScript
+- Automated Version/Release system (check 'version-bump-guide.md')
 
 ## 📋 Prerequisites
 
