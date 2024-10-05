@@ -95,7 +95,22 @@ deno task release
    deno task version:major
    ```
 
-4. For a complete release:
+4. For a major release:
+   ```bash
+   deno task release:major
+   ```
+   
+5. For a minor release:
+   ```bash
+   deno task release:minor
+   ```
+   
+6. For a patch release:
+   ```bash
+   deno task release:patch
+   ```
+   
+7. For a quick patch release:
    ```bash
    deno task release
    ```
