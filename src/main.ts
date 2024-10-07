@@ -1,19 +1,13 @@
 import express from "npm:express";
 import cors from "npm:cors";
 
-import exec from "https://deno.land/std@0.116.0/node/child_process.ts";
 import path from "https://deno.land/std@0.116.0/node/path.ts";
 
 import { Logger } from '../.core/logger.ts';
-import { CONFIG } from './config.ts';
-import { STATE } from './state.ts';
 
 export async function main(): Promise<void> {
   Logger.log('hello world from ./src/main.ts!');
 
-  // STATE.PORT = CONFIG['PORT'] || 3000;
-
-  // Configuration object
   const CONFIG = {
     PORT: 60002,
     TIMEOUT: 30000,
@@ -21,11 +15,9 @@ export async function main(): Promise<void> {
     CHROME_USER_DATA_DIR: path.join(Deno.env.get('LOCALAPPDATA') || '', 'Google\\Chrome\\User Data'),
   };
 
-  // State management
   const STATE = {
     latestPrompt: "",
     isProcessing: false,
-    // closeRequest: false,
     lastResponse: "",
     resolveResponse: null as ((value: unknown) => void) | null,
   };
@@ -115,16 +107,6 @@ export async function main(): Promise<void> {
     }
   });
 
-  // const closeRequest = (): boolean => {
-  //   STATE.closeRequest = false;
-
-  //   return true;
-  // };
-
-  // app.get("/close-request", (req: any, res: any) => {
-  //   res.json({ "close-request": STATE.closeRequest === true ? closeRequest() : false });
-  // });
-
   app.get("/latest-prompt", (req: any, res: any) => {
     res.json({ prompt: STATE.latestPrompt });
   });
@@ -146,7 +128,6 @@ export async function main(): Promise<void> {
       STATE.resolveResponse = null;
     }
 
-    // STATE.closeRequest = true;
     closeChrome();
 
     res.json({ response });
