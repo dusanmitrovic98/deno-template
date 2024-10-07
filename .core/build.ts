@@ -15,7 +15,7 @@ try {
     format: 'esm',
     platform: 'neutral',
     target: 'deno1.0',
-    external: ['https://deno.land/x/dotenv@v3.2.2/mod.ts'],
+    external: ['https://deno.land/x/dotenv@v3.2.2/mod.ts', 'npm:express', 'npm:cors'],
   });
   console.log('Build completed successfully!');
 } catch (error) {
