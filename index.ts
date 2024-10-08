@@ -14,27 +14,33 @@ import { setupEnv } from './.core/env.ts';
   try {
     const env = await setupEnv();
 
-    Logger.clear();
-    Logger.header(`${env.APP_NAME.toUpperCase()} - ${env.ENV.toUpperCase()} MODE`, true);
+    await Logger.clear();
+    await Logger.header(`${env.APP_NAME.toUpperCase()} - ${env.ENV.toUpperCase()} MODE`, true);
 
-    Logger.logSection("Environment Variables", brightYellow, true);
+    await Logger.logSection("Environment Variables", brightYellow, true);
     for (const [key, value] of Object.entries(env)) {
-      Logger.logKeyValue(key, value, true);
+      await Logger.logKeyValue(key, value, true);
     }
 
-    Logger.logSection("Main Program", brightMagenta, true);
+    await Logger.logSection("Main Program", brightMagenta, true);
     const startTime = performance.now();
-    await main();
-    const endTime = performance.now();
 
-    Logger.logSection("Program Completed", cyan, true);
-    Logger.logKeyValue(
+    await main(async (response: any) => {
+      await Logger.logSection(response.message, cyan, true);
+    }, async (error: any) => {
+      await Logger.logSection("Program Failed", red, true);
+      throw error;
+    });
+
+    const endTime = performance.now();
+    await Logger.logKeyValue(
       "Main program execution time",
-      `${green(`${(endTime - startTime).toFixed(2)} ms\n`)}`
-    , true);
+      `${green(`${(endTime - startTime).toFixed(2)} ms\n`)}`,
+      true
+    );
   } catch (error) {
-    Logger.logSection("Error Occurred", red, true);
-    console.error(red(`${error.message}`));
+    await Logger.logSection("Error Occurred", red, true);
+    await Logger.error(red(`${error.message}`));
     throw error;
   }
 })();

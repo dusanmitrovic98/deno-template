@@ -23,39 +23,39 @@ export class Logger {
         return `${hours}:${minutes}:${seconds}`;
     }
 
-    static setEnvironment(env: string): void {
+    static async setEnvironment(env: string): Promise<void> {
         this.environment = env;
     }
 
-    private static shouldLog(forceLog: boolean): boolean {;
+    private static async shouldLog(forceLog: boolean): Promise<boolean> {;
         return forceLog || this.environment === 'development';
     }
 
-    static success(message: string, forceLog: boolean = false): void {
-        if (this.shouldLog(forceLog)) {
+    static async success(message: string, forceLog: boolean = false): Promise<void> {
+        if (await this.shouldLog(forceLog)) {
             this.log(`${green('✔')} ${green(message)}`);
         }
     }
 
-    static info(message: string, forceLog: boolean = false): void {
-        if (this.shouldLog(forceLog)) {
+    static async info(message: string, forceLog: boolean = false): Promise<void> {
+        if (await this.shouldLog(forceLog)) {
             this.log(`${blue(message)}`);
         }
     }
 
-    static warn(message: string, forceLog: boolean = false): void {
-        if (this.shouldLog(forceLog)) {
+    static async warn(message: string, forceLog: boolean = false): Promise<void> {
+        if (await this.shouldLog(forceLog)) {
             this.log(`${yellow('⚠')} ${yellow(message)}`);
         }
     }
 
-    static error(message: string, forceLog: boolean = false): void {
-        if (this.shouldLog(forceLog)) {
+    static async error(message: string, forceLog: boolean = false): Promise<void> {
+        if (await this.shouldLog(forceLog)) {
             this.log(`${red('✖')} ${red(message)}`);
         }
     }
 
-    static log(message: string, color: any = white, isBold: boolean = false): void {
+    static async log(message: string, color: any = white, isBold: boolean = false): Promise<void> {
         if (isBold) {
             console.log(`${bold(color(message))}`);
         } else {
@@ -63,8 +63,8 @@ export class Logger {
         }
     }
 
-    static header(text: string, forceLog: boolean = false) {
-        if (this.shouldLog(forceLog)) {
+    static async header(text: string, forceLog: boolean = false): Promise<void> {
+        if (await this.shouldLog(forceLog)) {
         console.log(bold(cyan(`
 ╔════════════════════════════════════════════════╗
 ║ ${text.padEnd(46)} ║
@@ -72,20 +72,20 @@ export class Logger {
         }
     }
 
-    static logSection(title: string, color: (str: string) => string, forceLog: boolean = false) {
-        if (this.shouldLog(forceLog)) {
+    static async logSection(title: string, color: (str: string) => string, forceLog: boolean = false): Promise<void> {
+        if (await this.shouldLog(forceLog)) {
             console.log(color(`\n■ ${title}`));
         console.log(color(`${'─'.repeat(50)}`));
         }
     }
 
-    static logKeyValue(key: string, value: string, forceLog: boolean = false) {
-        if (this.shouldLog(forceLog)) {
+    static async logKeyValue(key: string, value: string, forceLog: boolean = false): Promise<void> {
+        if (await this.shouldLog(forceLog)) {
             console.log(`${white(bold(key.padEnd(15)))} : ${value}`);
         }
     }
 
-    static clear() {
+    static async clear(): Promise<void> {
         console.clear();
     }
 }
