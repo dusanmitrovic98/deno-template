@@ -27,30 +27,30 @@ export class Logger {
         this.environment = env;
     }
 
-    private static async shouldLog(forceLog: boolean): Promise<boolean> {;
+    private static shouldLog(forceLog: boolean): boolean {
         return forceLog || this.environment === 'development';
     }
 
     static async success(message: string, forceLog: boolean = false): Promise<void> {
-        if (await this.shouldLog(forceLog)) {
+        if (this.shouldLog(forceLog)) {
             this.log(`${green('✔')} ${green(message)}`);
         }
     }
 
     static async info(message: string, forceLog: boolean = false): Promise<void> {
-        if (await this.shouldLog(forceLog)) {
+        if (this.shouldLog(forceLog)) {
             this.log(`${blue(message)}`);
         }
     }
 
     static async warn(message: string, forceLog: boolean = false): Promise<void> {
-        if (await this.shouldLog(forceLog)) {
+        if (this.shouldLog(forceLog)) {
             this.log(`${yellow('⚠')} ${yellow(message)}`);
         }
     }
 
     static async error(message: string, forceLog: boolean = false): Promise<void> {
-        if (await this.shouldLog(forceLog)) {
+        if (this.shouldLog(forceLog)) {
             this.log(`${red('✖')} ${red(message)}`);
         }
     }
@@ -64,8 +64,8 @@ export class Logger {
     }
 
     static async header(text: string, forceLog: boolean = false): Promise<void> {
-        if (await this.shouldLog(forceLog)) {
-        console.log(bold(cyan(`
+        if (this.shouldLog(forceLog)) {
+            console.log(bold(cyan(`
 ╔════════════════════════════════════════════════╗
 ║ ${text.padEnd(46)} ║
 ╚════════════════════════════════════════════════╝`)));
@@ -73,14 +73,14 @@ export class Logger {
     }
 
     static async logSection(title: string, color: (str: string) => string, forceLog: boolean = false): Promise<void> {
-        if (await this.shouldLog(forceLog)) {
+        if (this.shouldLog(forceLog)) {
             console.log(color(`\n■ ${title}`));
-        console.log(color(`${'─'.repeat(50)}`));
+            console.log(color(`${'─'.repeat(50)}`));
         }
     }
 
     static async logKeyValue(key: string, value: string, forceLog: boolean = false): Promise<void> {
-        if (await this.shouldLog(forceLog)) {
+        if (this.shouldLog(forceLog)) {
             console.log(`${white(bold(key.padEnd(15)))} : ${value}`);
         }
     }
