@@ -9,7 +9,7 @@
     "build": "deno run -A ./.core/build.ts",
     "build:git": "deno task build && deno task git --wait",
     "start": "deno run --allow-all ./dist/bundle.js",
-    "clear": "rm -rf ./dist",
+    "clean": "rm -rf ./dist",
     "lint": "deno lint",
     "fmt": "deno fmt",
     "version:major": "deno run --allow-read --allow-write ./.core/version-bump.ts major",
